@@ -132,10 +132,14 @@ const Home = () => {
                     opacity: 0.9
                   }} />
                   <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', background: 'rgba(255,255,255,0.9)', padding: '0.4rem 0.75rem', borderRadius: '9999px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
-                      <Star size={14} color="var(--accent)" fill="var(--accent)" />
-                      <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-primary)' }}>{spot.rating}</span>
-                    </div>
+                    <div style={{ position: 'absolute', top: '1.25rem', right: '1.25rem', padding: '0.5rem 1rem', borderRadius: '1rem', background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', gap: '0.4rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
+                    <Star size={16} fill="var(--accent)" color="var(--accent)" />
+                    <span style={{ fontWeight: 800, fontSize: '0.9rem' }}>
+                      {spot.reviews && spot.reviews.length > 0 
+                        ? (spot.reviews.reduce((acc, r) => acc + (r.rating || 5), 0) / spot.reviews.length).toFixed(1)
+                        : (spot.rating || '5.0')}
+                    </span>
+                  </div>
                   </div>
                 </div>
 

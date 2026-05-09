@@ -173,10 +173,13 @@ const District = () => {
                     backgroundPosition: 'center',
                     opacity: 0.9
                   }} />
-                  <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
-                    <div style={{ background: 'rgba(255,255,255,0.95)', padding: '0.4rem 0.75rem', borderRadius: '9999px', fontSize: '0.85rem', fontWeight: 800, color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: '0.25rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
-                      <Star size={14} fill="var(--accent)" /> {loc.rating}
-                    </div>
+                  <div style={{ position: 'absolute', top: '1.25rem', right: '1.25rem', padding: '0.5rem 1rem', borderRadius: '1rem', background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', gap: '0.4rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
+                    <Star size={16} fill="var(--accent)" color="var(--accent)" />
+                    <span style={{ fontWeight: 800, fontSize: '0.9rem' }}>
+                      {loc.reviews && loc.reviews.length > 0 
+                        ? (loc.reviews.reduce((acc, r) => acc + (r.rating || 5), 0) / loc.reviews.length).toFixed(1)
+                        : (loc.rating || '5.0')}
+                    </span>
                   </div>
                   <div style={{ position: 'absolute', bottom: '1rem', left: '1rem' }}>
                     <span style={{ background: 'rgba(0,0,0,0.5)', color: 'white', padding: '0.3rem 0.8rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 700, backdropFilter: 'blur(4px)' }}>

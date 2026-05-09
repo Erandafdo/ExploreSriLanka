@@ -28,6 +28,9 @@ const LocationDetails = () => {
     forecast: [] 
   });
 
+  const [selectedRating, setSelectedRating] = useState(5);
+  const [hoverRating, setHoverRating] = useState(0);
+
   const fetchWeather = async (locName, district) => {
     try {
       const cleanName = locName.split('(')[0].trim();
@@ -356,16 +359,16 @@ const LocationDetails = () => {
                     e.preventDefault();
                     const user = e.target.user.value;
                     const comment = e.target.comment.value;
-                    const rating = 5; // Static for now, can be expanded
                     
                     try {
                       const response = await fetch(`${API_BASE_URL}/api/locations/${location.id}/reviews`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ user, rating, comment })
+                        body: JSON.stringify({ user, rating: selectedRating, comment })
                       });
                       if (response.ok) {
                         alert('Review posted successfully!');
+                        setSelectedRating(5); // Reset
                         fetchLocationDetails(); // Refresh data
                         e.target.reset();
                       }
@@ -377,6 +380,30 @@ const LocationDetails = () => {
                   style={{ padding: '3rem', borderRadius: '2rem', marginBottom: '2rem', background: 'rgba(255,255,255,0.6)' }}
                 >
                   <h3 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '1.5rem' }}>Share your journey</h3>
+                  
+                  <div style={{ marginBottom: '2rem' }}>
+                    <label style={{ display: 'block', fontWeight: 800, marginBottom: '0.75rem', fontSize: '0.9rem' }}>YOUR RATING</label>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <div 
+                          key={star} 
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => setSelectedRating(star)}
+                          onMouseEnter={() => setHoverRating(star)}
+                          onMouseLeave={() => setHoverRating(0)}
+                        >
+                          <Star 
+                            size={32} 
+                            fill={(hoverRating || selectedRating) >= star ? "var(--accent)" : "none"}
+                            color={(hoverRating || selectedRating) >= star ? "var(--accent)" : "rgba(0,0,0,0.2)"}
+                            style={{ transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)', transform: (hoverRating || selectedRating) >= star ? 'scale(1.1)' : 'scale(1)' }}
+                          />
+                        </div>
+                      ))}
+                      <span style={{ marginLeft: '1rem', fontWeight: 800, color: 'var(--accent)', fontSize: '1.2rem' }}>{selectedRating}.0</span>
+                    </div>
+                  </div>
+
                   <div style={{ display: 'grid', gap: '1.5rem', marginBottom: '2rem' }}>
                     <div>
                       <label style={{ display: 'block', fontWeight: 800, marginBottom: '0.5rem', fontSize: '0.9rem' }}>YOUR NAME</label>
