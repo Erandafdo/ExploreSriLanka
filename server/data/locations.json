@@ -1,0 +1,86 @@
+{
+  "locations": [
+    {
+      "id": "sigiriya",
+      "name": "Sigiriya Rock",
+      "district": "Matale",
+      "rating": "5.0",
+      "category": "Waterfall",
+      "description": "An ancient palace and fortress complex, a UNESCO World Heritage site known for its massive column of rock.",
+      "image": "/landscape.png",
+      "highlights": [
+        "Ancient Frescoes",
+        "Lion Gate",
+        "Mirror Wall",
+        "Water Gardens"
+      ],
+      "bestTime": "Early morning or late afternoon",
+      "duration": "3-4 hours"
+    },
+    {
+      "id": "ella",
+      "name": "Nine Arch Bridge",
+      "district": "Badulla",
+      "rating": "4.8",
+      "category": "Heritage",
+      "description": "A stunning colonial-era railway bridge known for its architectural beauty and lush surroundings.",
+      "image": "/landscape.png",
+      "highlights": [
+        "Train watching",
+        "Tea plantation walk",
+        "Photography spot"
+      ],
+      "bestTime": "When a train is passing",
+      "duration": "1-2 hours",
+      "thumbnail": "http://localhost:5001/uploads/1778320650472-fmx7kp9uddxy8col1wad.jpg"
+    },
+    {
+      "id": "kandy",
+      "name": "Temple of the Tooth",
+      "district": "Kandy",
+      "rating": "4.9",
+      "category": "Heritage",
+      "description": "A sacred Buddhist temple located in the royal palace complex of the former Kingdom of Kandy.",
+      "image": "/landscape.png",
+      "highlights": [
+        "Sacred Tooth Relic",
+        "Golden Roof",
+        "Kandyan Architecture"
+      ],
+      "bestTime": "During puja ceremonies",
+      "duration": "2 hours"
+    },
+    {
+      "id": "mirissa",
+      "name": "Mirissa Beach",
+      "district": "Matara",
+      "rating": "4.7",
+      "category": "Beach",
+      "description": "A tropical paradise famous for its laid-back vibe and incredible whale watching.",
+      "image": "/landscape.png",
+      "highlights": [
+        "Whale Watching",
+        "Coconut Tree Hill",
+        "Surfing"
+      ],
+      "bestTime": "November to April",
+      "duration": "Full day"
+    },
+    {
+      "id": "adams-peak",
+      "name": "Adam's Peak",
+      "district": "Ratnapura",
+      "rating": "4.9",
+      "category": "Mountain",
+      "description": "A sacred mountain known for the 'sacred footprint' and breathtaking sunrise views.",
+      "image": "/landscape.png",
+      "highlights": [
+        "Sacred Footprint",
+        "Sunrise Views",
+        "Challenging Hike"
+      ],
+      "bestTime": "December to May (Season)",
+      "duration": "5-8 hours"
+    }
+  ]
+}

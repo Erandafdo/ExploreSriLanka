@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@400;700;900&display=swap');
+
+:root {
+  --bg-color: #f8fafc;
+  --text-primary: #064e3b;
+  --text-secondary: #0f766e;
+  --accent: #10b981;
+  --accent-hover: #059669;
+  
+  /* Liquid Glass variables */
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --glass-shadow: 0 8px 32px 0 rgba(16, 185, 129, 0.15);
+  --glass-blur: blur(16px);
+  
+  --map-fill: rgba(255, 255, 255, 0.7);
+  --map-stroke: #10b981;
+  --map-hover: #34d399;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #e0f2fe;
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  /* Beautiful liquid gradient background */
+  background: 
+    radial-gradient(circle at 15% 50%, rgba(16, 185, 129, 0.15), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(52, 211, 153, 0.15), transparent 25%),
+    radial-gradient(circle at 50% 100%, rgba(5, 150, 105, 0.1), transparent 40%);
+  background-color: #f1f5f9;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* Liquid Glass Utilities */
+.liquid-glass {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.map-container {
+  perspective: 1200px;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.map-svg {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 10px 15px rgba(6, 78, 59, 0.2));
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.6s ease;
+}
+
+.map-svg:hover {
+  transform: scale(1.02);
+  filter: drop-shadow(0 15px 25px rgba(6, 78, 59, 0.3));
+}
+
+.district-group {
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  cursor: pointer;
+}
+
+.district-path {
+  fill: var(--map-fill);
+  stroke: var(--map-stroke);
+  stroke-width: 1.5;
+  transition: all 0.4s ease;
+}
+
+.district-group:hover {
+  transform: translateY(-20px);
+}
+
+.district-group:hover .district-path {
+  fill: var(--map-hover);
+  stroke: #fff;
+  stroke-width: 2;
+  filter: drop-shadow(0 10px 15px rgba(16, 185, 129, 0.4));
+}
+
+.district-text {
+  fill: #064e3b;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  text-shadow: 0 2px 4px rgba(255,255,255,0.8);
+}
+
+.district-group:hover .district-text {
+  opacity: 1;
+}
+
+.hero-title {
+  background: linear-gradient(to right, #064e3b, #10b981);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
