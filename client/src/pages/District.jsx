@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, MapPin, Navigation, Info, Mountain, Waves, Sun, Droplets, Landmark, CloudSun, Star } from 'lucide-react';
+import API_BASE_URL from '../api';
 import sriLankaMap from '@svg-maps/sri-lanka';
 
 const District = () => {
@@ -22,7 +23,7 @@ const District = () => {
 
   const fetchLocations = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/locations');
+      const response = await fetch(`${API_BASE_URL}/api/locations`);
       const data = await response.json();
       // Filter by district name (case-insensitive)
       const filtered = data.filter(loc => 

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Map3D from '../components/Map3D';
 import { motion } from 'framer-motion';
 import { ChevronDown, Star, MapPin } from 'lucide-react';
+import API_BASE_URL from '../api';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ const Home = () => {
   useEffect(() => {
     const fetchSpots = async () => {
       try {
-        const response = await fetch('http://localhost:5001/api/locations');
+        const response = await fetch(`${API_BASE_URL}/api/locations`);
         const data = await response.json();
         setSpots(data);
       } catch (error) {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Star, MapPin, Calendar, Clock, Info, Navigation, Share2, Heart, CloudSun, CloudRain, Image as ImageIcon } from 'lucide-react';
+import API_BASE_URL from '../api';
 
 const LocationDetails = () => {
   const { name } = useParams();
@@ -83,7 +84,7 @@ const LocationDetails = () => {
   const fetchLocationDetails = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:5001/api/locations/${encodeURIComponent(decodedName)}`);
+      const response = await fetch(`${API_BASE_URL}/api/locations/${encodeURIComponent(decodedName)}`);
       if (response.ok) {
         const data = await response.json();
         setLocation(data);
@@ -358,7 +359,7 @@ const LocationDetails = () => {
                     const rating = 5; // Static for now, can be expanded
                     
                     try {
-                      const response = await fetch(`http://localhost:5001/api/locations/${location.id}/reviews`, {
+                      const response = await fetch(`${API_BASE_URL}/api/locations/${location.id}/reviews`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ user, rating, comment })

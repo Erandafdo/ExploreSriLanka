@@ -1,0 +1,29 @@
+services:
+  # Backend Web Service
+  - type: web
+    name: explore-sri-lanka-api
+    env: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: NODE_VERSION
+        value: 18.0.0
+      - key: MONGODB_URI
+        sync: false # You will set this manually in the dashboard
+
+  # Frontend Static Site
+  - type: static
+    name: explore-sri-lanka-site
+    env: static
+    plan: free
+    rootDir: client
+    buildCommand: npm install && npm run build
+    publishDir: dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: explore-sri-lanka-api
+          property: host

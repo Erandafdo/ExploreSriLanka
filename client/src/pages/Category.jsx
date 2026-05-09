@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Star, MapPin } from 'lucide-react';
+import API_BASE_URL from '../api';
 
 const Category = () => {
   const { type } = useParams();
@@ -15,7 +16,7 @@ const Category = () => {
 
   const fetchSpots = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/locations');
+      const response = await fetch(`${API_BASE_URL}/api/locations`);
       const data = await response.json();
       // Filter by category (case-insensitive)
       const filtered = data.filter(s => {

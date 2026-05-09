@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Settings, Plus, Edit, Trash2, Save, X, Image as ImageIcon, MapPin, Clock, Calendar, Info, Star, Upload } from 'lucide-react';
+import API_BASE_URL from '../api';
 
 const SRI_LANKA_DISTRICTS = [
   "Ampara", "Anuradhapura", "Badulla", "Batticaloa", "Colombo", "Galle", "Gampaha", 
@@ -35,7 +36,7 @@ const Admin = () => {
 
   const fetchLocations = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/locations');
+      const response = await fetch(`${API_BASE_URL}/api/locations`);
       const data = await response.json();
       setLocations(data);
     } catch (error) {
@@ -52,7 +53,7 @@ const Admin = () => {
 
     try {
       setUploading(true);
-      const response = await fetch('http://localhost:5001/api/upload', {
+      const response = await fetch(`${API_BASE_URL}/api/upload`, {
         method: 'POST',
         body: uploadData
       });
@@ -103,8 +104,8 @@ const Admin = () => {
 
     try {
       const url = editingLoc 
-        ? `http://localhost:5001/api/locations/${editingLoc.id}`
-        : 'http://localhost:5001/api/locations';
+        ? `${API_BASE_URL}/api/locations/${editingLoc.id}`
+        : `${API_BASE_URL}/api/locations`;
       
       const method = editingLoc ? 'PUT' : 'POST';
 
@@ -131,7 +132,7 @@ const Admin = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this location?')) {
       try {
-        const response = await fetch(`http://localhost:5001/api/locations/${id}`, {
+        const response = await fetch(`${API_BASE_URL}/api/locations/${id}`, {
           method: 'DELETE'
         });
         if (response.ok) {
@@ -305,7 +306,7 @@ const Admin = () => {
                               type="button"
                               onClick={async () => {
                                 if (window.confirm('Delete this review?')) {
-                                  const res = await fetch(`http://localhost:5001/api/locations/${editingLoc.id}/reviews/${rev._id}`, { method: 'DELETE' });
+                                  const res = await fetch(`${API_BASE_URL}/api/locations/${editingLoc.id}/reviews/${rev._id}`, { method: 'DELETE' });
                                   if (res.ok) {
                                     alert('Review removed');
                                     const updated = await res.json();
