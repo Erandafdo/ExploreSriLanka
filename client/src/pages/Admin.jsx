@@ -148,6 +148,7 @@ const Admin = () => {
   return (
     <div style={{ minHeight: '100vh', padding: 'clamp(5rem, 10vw, 8rem) 0 4rem', background: '#f8fafc' }}>
       <div className="container">
+        {/* Header Section */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem', flexWrap: 'wrap', gap: '1.5rem' }}>
           <div>
             <h1 style={{ fontSize: 'clamp(1.75rem, 5vw, 2.5rem)', fontWeight: 900, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -155,96 +156,138 @@ const Admin = () => {
             </h1>
             <p style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>Manage your destinations and reviews</p>
           </div>
-          <div style={{ display: 'flex', gap: '1rem' }}>
+          <div style={{ display: 'flex', gap: '0.75rem', width: '100%', maxWidth: 'max-content' }}>
             <button 
               onClick={() => {
                 localStorage.removeItem('adminAuthenticated');
                 window.location.href = '/login';
               }}
               className="liquid-glass" 
-              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.5rem', borderRadius: '9999px', background: 'white', color: 'var(--text-secondary)', border: 'none', fontWeight: 700, cursor: 'pointer' }}
+              style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: '1rem', background: 'white', color: 'var(--text-secondary)', border: 'none', fontWeight: 700, cursor: 'pointer' }}
             >
-              <LogOut size={20} /> Logout
+              <LogOut size={18} /> <span className="hide-mobile">Logout</span>
             </button>
             <button 
               onClick={() => handleOpenModal()}
               className="liquid-glass" 
-              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.5rem', borderRadius: '9999px', background: 'var(--accent)', color: 'white', border: 'none', fontWeight: 700, cursor: 'pointer', boxShadow: '0 10px 15px -3px rgba(16, 185, 129, 0.2)' }}
+              style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', padding: '0.75rem 1.5rem', borderRadius: '1rem', background: 'var(--accent)', color: 'white', border: 'none', fontWeight: 700, cursor: 'pointer', boxShadow: '0 10px 15px -3px rgba(16, 185, 129, 0.2)' }}
             >
-              <Plus size={20} /> Add Location
+              <Plus size={20} /> Add <span className="hide-mobile">Location</span>
             </button>
           </div>
         </div>
 
-        <div className="liquid-glass" style={{ borderRadius: '1.5rem', overflowX: 'auto', background: 'white' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '600px' }}>
-            <thead>
-              <tr style={{ background: 'rgba(16, 185, 129, 0.05)', borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
-                <th style={{ padding: '1.25rem', fontWeight: 800 }}>Preview</th>
-                <th style={{ padding: '1.25rem', fontWeight: 800 }}>Name</th>
-                <th style={{ padding: '1.25rem', fontWeight: 800 }}>District</th>
-                <th style={{ padding: '1.25rem', fontWeight: 800 }}>Category</th>
-                <th style={{ padding: '1.25rem', fontWeight: 800, textAlign: 'right' }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {locations.map((loc) => (
-                <tr key={loc.id} style={{ borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
-                  <td style={{ padding: '1.25rem' }}>
-                    <div style={{ width: '50px', height: '35px', borderRadius: '0.4rem', backgroundImage: `url(${loc.thumbnail || loc.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
-                  </td>
-                  <td style={{ padding: '1.25rem' }}>
-                    <span style={{ fontWeight: 700 }}>{loc.name}</span>
-                  </td>
-                  <td style={{ padding: '1.25rem' }}>{loc.district}</td>
-                  <td style={{ padding: '1.25rem' }}>
-                    <span style={{ background: 'rgba(16, 185, 129, 0.1)', color: 'var(--accent)', padding: '0.2rem 0.6rem', borderRadius: '9999px', fontSize: '0.8rem', fontWeight: 700 }}>
-                      {loc.category}
-                    </span>
-                  </td>
-                  <td style={{ padding: '1.25rem', textAlign: 'right' }}>
-                    <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
-                      <button onClick={() => handleOpenModal(loc)} style={{ background: 'rgba(16, 185, 129, 0.1)', border: 'none', padding: '0.5rem', borderRadius: '0.5rem', cursor: 'pointer' }}>
-                        <Edit size={18} color="var(--accent)" />
-                      </button>
-                      <button onClick={() => handleDelete(loc.id)} style={{ background: 'rgba(239, 68, 68, 0.05)', border: 'none', padding: '0.5rem', borderRadius: '0.5rem', cursor: 'pointer' }}>
-                        <Trash2 size={18} color="#ef4444" />
-                      </button>
-                    </div>
-                  </td>
+        {/* Content Section: Table for Desktop, Cards for Mobile */}
+        <div className="admin-content-view">
+          {/* Desktop Table View */}
+          <div className="desktop-only-table liquid-glass" style={{ borderRadius: '1.5rem', overflow: 'hidden', background: 'white' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+              <thead>
+                <tr style={{ background: 'rgba(16, 185, 129, 0.05)', borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
+                  <th style={{ padding: '1.25rem', fontWeight: 800 }}>Preview</th>
+                  <th style={{ padding: '1.25rem', fontWeight: 800 }}>Name</th>
+                  <th style={{ padding: '1.25rem', fontWeight: 800 }}>District</th>
+                  <th style={{ padding: '1.25rem', fontWeight: 800 }}>Category</th>
+                  <th style={{ padding: '1.25rem', fontWeight: 800, textAlign: 'right' }}>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {locations.map((loc) => (
+                  <tr key={loc.id} style={{ borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
+                    <td style={{ padding: '1.25rem' }}>
+                      <div style={{ width: '50px', height: '35px', borderRadius: '0.4rem', backgroundImage: `url(${loc.thumbnail || loc.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
+                    </td>
+                    <td style={{ padding: '1.25rem' }}>
+                      <span style={{ fontWeight: 700 }}>{loc.name}</span>
+                    </td>
+                    <td style={{ padding: '1.25rem' }}>{loc.district}</td>
+                    <td style={{ padding: '1.25rem' }}>
+                      <span style={{ background: 'rgba(16, 185, 129, 0.1)', color: 'var(--accent)', padding: '0.2rem 0.6rem', borderRadius: '9999px', fontSize: '0.8rem', fontWeight: 700 }}>
+                        {loc.category}
+                      </span>
+                    </td>
+                    <td style={{ padding: '1.25rem', textAlign: 'right' }}>
+                      <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+                        <button onClick={() => handleOpenModal(loc)} style={{ background: 'rgba(16, 185, 129, 0.1)', border: 'none', padding: '0.5rem', borderRadius: '0.5rem', cursor: 'pointer' }}>
+                          <Edit size={18} color="var(--accent)" />
+                        </button>
+                        <button onClick={() => handleDelete(loc.id)} style={{ background: 'rgba(239, 68, 68, 0.05)', border: 'none', padding: '0.5rem', borderRadius: '0.5rem', cursor: 'pointer' }}>
+                          <Trash2 size={18} color="#ef4444" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="mobile-only-cards" style={{ display: 'grid', gap: '1rem' }}>
+            {locations.map((loc) => (
+              <div key={loc.id} className="liquid-glass" style={{ background: 'white', padding: '1.25rem', borderRadius: '1.5rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                <div style={{ width: '80px', height: '60px', borderRadius: '0.75rem', backgroundImage: `url(${loc.thumbnail || loc.image})`, backgroundSize: 'cover', backgroundPosition: 'center', flexShrink: 0 }}></div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <h3 style={{ fontSize: '1rem', fontWeight: 800, marginBottom: '0.25rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{loc.name}</h3>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600 }}>{loc.district} • {loc.category}</p>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <button onClick={() => handleOpenModal(loc)} style={{ background: 'rgba(16, 185, 129, 0.1)', border: 'none', padding: '0.6rem', borderRadius: '0.75rem' }}>
+                    <Edit size={18} color="var(--accent)" />
+                  </button>
+                  <button onClick={() => handleDelete(loc.id)} style={{ background: 'rgba(239, 68, 68, 0.05)', border: 'none', padding: '0.6rem', borderRadius: '0.75rem' }}>
+                    <Trash2 size={18} color="#ef4444" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
       <AnimatePresence>
         {showModal && (
-          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(10px)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
-            <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 50 }} className="liquid-glass" style={{ width: '100%', maxWidth: '800px', maxHeight: '90vh', overflowY: 'auto', padding: 'clamp(1.5rem, 5vw, 3rem)', background: 'white', borderRadius: '2rem', position: 'relative' }}>
-              <button onClick={() => setShowModal(false)} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'none', border: 'none', cursor: 'pointer' }}>
-                <X size={24} />
+          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(10px)', zIndex: 1000, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
+            <motion.div 
+              initial={{ y: "100%" }} 
+              animate={{ y: 0 }} 
+              exit={{ y: "100%" }} 
+              className="liquid-glass admin-modal"
+              style={{ 
+                width: '100%', 
+                maxWidth: '800px', 
+                maxHeight: '92vh', 
+                overflowY: 'auto', 
+                padding: '1.5rem', 
+                background: 'white', 
+                borderTopLeftRadius: '2.5rem', 
+                borderTopRightRadius: '2.5rem', 
+                position: 'relative' 
+              }}
+            >
+              <div style={{ width: '40px', height: '5px', background: '#e2e8f0', borderRadius: '99px', margin: '0 auto 1.5rem' }}></div>
+              <button onClick={() => setShowModal(false)} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'rgba(0,0,0,0.05)', border: 'none', padding: '0.5rem', borderRadius: '9999px', cursor: 'pointer' }}>
+                <X size={20} />
               </button>
 
-              <h2 style={{ fontSize: '1.75rem', fontWeight: 900, marginBottom: '2rem' }}>{editingLoc ? 'Update Location' : 'New Destination'}</h2>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '2rem' }}>{editingLoc ? 'Edit Destination' : 'New Destination'}</h2>
 
-              <form onSubmit={handleSave} className="admin-form" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem' }}>
+              <form onSubmit={handleSave} className="admin-form" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.25rem' }}>
                 <div>
-                  <label style={{ display: 'block', fontWeight: 800, marginBottom: '0.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>LOCATION NAME</label>
-                  <input required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', outline: 'none' }} />
+                  <label className="admin-label">NAME</label>
+                  <input required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="admin-input" />
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1.25rem' }}>
                   <div>
-                    <label style={{ display: 'block', fontWeight: 800, marginBottom: '0.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>DISTRICT</label>
-                    <select value={formData.district} onChange={(e) => setFormData({...formData, district: e.target.value})} style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', outline: 'none', background: 'white' }}>
+                    <label className="admin-label">DISTRICT</label>
+                    <select value={formData.district} onChange={(e) => setFormData({...formData, district: e.target.value})} className="admin-input">
                       {SRI_LANKA_DISTRICTS.map(d => <option key={d} value={d}>{d}</option>)}
                     </select>
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontWeight: 800, marginBottom: '0.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>CATEGORY</label>
-                    <select value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', outline: 'none', background: 'white' }}>
+                    <label className="admin-label">CATEGORY</label>
+                    <select value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} className="admin-input">
                       <option value="Heritage">Heritage</option>
                       <option value="Beach">Beach</option>
                       <option value="Mountain">Mountain</option>
@@ -255,26 +298,26 @@ const Admin = () => {
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontWeight: 800, marginBottom: '0.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>DESCRIPTION</label>
-                  <textarea required value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} style={{ width: '100%', minHeight: '100px', padding: '0.8rem 1rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', outline: 'none' }} />
+                  <label className="admin-label">DESCRIPTION</label>
+                  <textarea required value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="admin-input" style={{ minHeight: '100px' }} />
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
-                  <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '1rem' }}>
-                    <label style={{ display: 'block', fontWeight: 800, marginBottom: '0.75rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>MAIN IMAGE</label>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.25rem' }}>
+                  <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '1.25rem' }}>
+                    <label className="admin-label">MAIN IMAGE</label>
                     <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                       <div style={{ width: '60px', height: '45px', borderRadius: '0.5rem', backgroundImage: `url(${formData.image})`, backgroundSize: 'cover', border: '1px solid white' }}></div>
-                      <label style={{ flex: 1, padding: '0.5rem', background: 'white', border: '1px dashed #cbd5e1', borderRadius: '0.5rem', cursor: 'pointer', textAlign: 'center', fontSize: '0.75rem', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem' }}>
+                      <label className="admin-upload-btn">
                         <Upload size={14} /> Upload
                         <input type="file" hidden onChange={(e) => handleFileUpload(e, 'image')} />
                       </label>
                     </div>
                   </div>
-                  <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '1rem' }}>
-                    <label style={{ display: 'block', fontWeight: 800, marginBottom: '0.75rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>THUMBNAIL</label>
+                  <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '1.25rem' }}>
+                    <label className="admin-label">THUMBNAIL</label>
                     <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                       <div style={{ width: '60px', height: '45px', borderRadius: '0.5rem', backgroundImage: `url(${formData.thumbnail})`, backgroundSize: 'cover', border: '1px solid white' }}></div>
-                      <label style={{ flex: 1, padding: '0.5rem', background: 'white', border: '1px dashed #cbd5e1', borderRadius: '0.5rem', cursor: 'pointer', textAlign: 'center', fontSize: '0.75rem', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem' }}>
+                      <label className="admin-upload-btn">
                         <Upload size={14} /> Upload
                         <input type="file" hidden onChange={(e) => handleFileUpload(e, 'thumbnail')} />
                       </label>
@@ -282,37 +325,37 @@ const Admin = () => {
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1.25rem' }}>
                   <div>
-                    <label style={{ display: 'block', fontWeight: 800, marginBottom: '0.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>BEST TIME</label>
-                    <input value={formData.bestTime} onChange={(e) => setFormData({...formData, bestTime: e.target.value})} style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', outline: 'none' }} />
+                    <label className="admin-label">BEST TIME</label>
+                    <input value={formData.bestTime} onChange={(e) => setFormData({...formData, bestTime: e.target.value})} className="admin-input" />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontWeight: 800, marginBottom: '0.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>DURATION</label>
-                    <input value={formData.duration} onChange={(e) => setFormData({...formData, duration: e.target.value})} style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', outline: 'none' }} />
+                    <label className="admin-label">DURATION</label>
+                    <input value={formData.duration} onChange={(e) => setFormData({...formData, duration: e.target.value})} className="admin-input" />
                   </div>
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontWeight: 800, marginBottom: '0.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>MAP CODE / SEARCH TERM</label>
-                  <input value={formData.mapCode} onChange={(e) => setFormData({...formData, mapCode: e.target.value})} style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', outline: 'none' }} />
+                  <label className="admin-label">MAP SRC / SEARCH</label>
+                  <input value={formData.mapCode} onChange={(e) => setFormData({...formData, mapCode: e.target.value})} className="admin-input" />
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontWeight: 800, marginBottom: '0.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>HIGHLIGHTS (COMMA SEPARATED)</label>
-                  <input value={formData.highlights} onChange={(e) => setFormData({...formData, highlights: e.target.value})} style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', outline: 'none' }} />
+                  <label className="admin-label">HIGHLIGHTS</label>
+                  <input placeholder="Comma separated..." value={formData.highlights} onChange={(e) => setFormData({...formData, highlights: e.target.value})} className="admin-input" />
                 </div>
 
                 {editingLoc && (
-                  <div style={{ marginTop: '1rem', padding: '1.5rem', background: '#fff5f5', borderRadius: '1rem', border: '1px solid #fed7d7' }}>
-                    <h3 style={{ fontSize: '1rem', fontWeight: 900, marginBottom: '1rem', color: '#c53030', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <Star size={18} /> User Reviews
+                  <div style={{ marginTop: '0.5rem', padding: '1.25rem', background: '#fff5f5', borderRadius: '1.25rem', border: '1px solid #fed7d7' }}>
+                    <h3 style={{ fontSize: '0.9rem', fontWeight: 900, marginBottom: '1rem', color: '#c53030', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <Star size={16} /> User Reviews ({editingLoc.reviews?.length || 0})
                     </h3>
-                    <div style={{ display: 'grid', gap: '0.75rem' }}>
+                    <div style={{ display: 'grid', gap: '0.75rem', maxHeight: '150px', overflowY: 'auto' }}>
                       {editingLoc.reviews?.map((rev) => (
                         <div key={rev._id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'white', padding: '0.75rem', borderRadius: '0.75rem' }}>
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <p style={{ fontWeight: 800, fontSize: '0.8rem', overflow: 'hidden', textOverflow: 'ellipsis' }}>{rev.user}</p>
+                            <p style={{ fontWeight: 800, fontSize: '0.75rem', overflow: 'hidden', textOverflow: 'ellipsis' }}>{rev.user}</p>
                             <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{rev.comment}</p>
                           </div>
                           <button 
@@ -337,7 +380,7 @@ const Admin = () => {
                   </div>
                 )}
 
-                <button type="submit" disabled={uploading} style={{ padding: '1rem', borderRadius: '1rem', border: 'none', background: 'var(--accent)', color: 'white', fontWeight: 900, fontSize: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', marginTop: '1rem' }}>
+                <button type="submit" disabled={uploading} style={{ padding: '1.1rem', borderRadius: '1.25rem', border: 'none', background: 'var(--accent)', color: 'white', fontWeight: 900, fontSize: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', marginTop: '1rem', marginBottom: '2rem' }}>
                   {uploading ? 'Processing...' : (editingLoc ? 'Update Destination' : 'Publish Destination')}
                 </button>
               </form>
@@ -347,12 +390,29 @@ const Admin = () => {
       </AnimatePresence>
 
       <style>{`
+        .admin-label { display: block; fontWeight: 800; marginBottom: 0.5rem; fontSize: 0.75rem; color: var(--text-secondary); letterSpacing: 0.05em; }
+        .admin-input { width: 100%; padding: 0.9rem 1rem; borderRadius: 0.9rem; border: 1px solid #e2e8f0; outline: none; fontSize: 1rem; background: white; }
+        .admin-upload-btn { flex: 1; padding: 0.6rem; background: white; border: 1px dashed #cbd5e1; borderRadius: 0.75rem; cursor: pointer; textAlign: center; fontSize: 0.75rem; fontWeight: 700; display: flex; alignItems: center; justifyContent: center; gap: 0.3rem; }
+        
+        .desktop-only-table { display: block; }
+        .mobile-only-cards { display: none; }
+        .hide-mobile { display: inline; }
+
+        @media (max-width: 768px) {
+          .desktop-only-table { display: none; }
+          .mobile-only-cards { display: grid; }
+          .hide-mobile { display: none; }
+          .admin-modal { border-radius: 2rem 2rem 0 0 !important; }
+        }
+
         @media (min-width: 650px) {
           .admin-form { grid-template-columns: 1fr 1fr !important; }
+          .admin-modal { border-radius: 2rem !important; margin: 2rem !important; align-self: center !important; }
         }
       `}</style>
     </div>
   );
+
 };
 
 export default Admin;
