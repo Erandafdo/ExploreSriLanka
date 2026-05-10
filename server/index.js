@@ -139,7 +139,9 @@ app.delete('/api/locations/:id/reviews/:reviewId', async (req, res) => {
 // Upload Endpoint
 app.post('/api/upload', upload.single('image'), (req, res) => {
   if (req.file) {
-    res.json({ url: `http://localhost:5001/uploads/${req.file.filename}` });
+    // Dynamically resolve base URL
+    const baseUrl = process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
+    res.json({ url: `${baseUrl}/uploads/${req.file.filename}` });
   } else {
     res.status(400).json({ message: 'No file uploaded' });
   }
@@ -150,24 +152,21 @@ const he = require('he');
 // Helper to sanitize map code
 const sanitizeMapCode = (code) => {
   if (!code) return '';
-  
-  // Decode HTML entities (e.g. &#39; -> ')
   let decoded = he.decode(code);
-  
-  // If it's a full iframe tag, extract the src URL
   if (decoded.includes('<iframe')) {
     const match = decoded.match(/src="([^"]+)"/);
     decoded = match ? match[1] : decoded;
   }
-  
-  // Clean up any extra whitespace or quotes
   return decoded.trim().replace(/^["']|["']$/g, '');
 };
 
 // Admin Routes (Update)
 app.put('/api/locations/:id', async (req, res) => {
   try {
-    console.log('Updating location:', req.params.id);
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({ message: 'Database not connected. Please check MONGODB_URI.' });
+    }
+    
     const updateData = { ...req.body };
     if (updateData.mapCode) {
       updateData.mapCode = sanitizeMapCode(updateData.mapCode);
@@ -180,13 +179,11 @@ app.put('/api/locations/:id', async (req, res) => {
     );
     
     if (updatedLocation) {
-      console.log('Location updated successfully');
       res.json(updatedLocation);
     } else {
       res.status(404).json({ message: 'Location not found' });
     }
   } catch (error) {
-    console.error('Error updating location:', error);
     res.status(500).json({ message: 'Error updating data', error: error.message });
   }
 });
@@ -194,7 +191,11 @@ app.put('/api/locations/:id', async (req, res) => {
 // Admin Routes (Add)
 app.post('/api/locations', async (req, res) => {
   try {
-    console.log('Publishing new location:', req.body.name);
+    // Check if DB is connected
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({ message: 'Database not connected. Check your MongoDB Atlas whitelist/URI.' });
+    }
+
     const newLocData = {
       id: req.body.name.toLowerCase().replace(/\s+/g, '-'),
       ...req.body
@@ -206,13 +207,13 @@ app.post('/api/locations', async (req, res) => {
 
     const newLocation = new Location(newLocData);
     await newLocation.save();
-    console.log('Location saved successfully');
     res.status(201).json(newLocation);
   } catch (error) {
     console.error('Error adding location:', error);
     res.status(500).json({ message: 'Error adding data', error: error.message });
   }
 });
+
 
 // Admin Routes (Delete)
 app.delete('/api/locations/:id', async (req, res) => {
