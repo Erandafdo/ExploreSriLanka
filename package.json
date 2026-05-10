@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "Full Stack Sri Lanka Tourism Platform",
   "scripts": {
-    "install-all": "npm install && cd client && npm install && cd ../server && npm install",
+    "install-all": "npm install --legacy-peer-deps && cd client && npm install --legacy-peer-deps && cd ../server && npm install --legacy-peer-deps",
     "client": "cd client && npm run dev",
     "server": "cd server && npm run dev",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "cd client && npm install && npm run build",
-    "start": "cd server && npm install && node index.js"
+    "build": "cd client && npm install --legacy-peer-deps && npm run build",
+    "start": "cd server && npm install --legacy-peer-deps && node index.js"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
