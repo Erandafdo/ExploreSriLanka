@@ -41,6 +41,35 @@ const District = () => {
     { name: 'Heritage', icon: <Landmark size={18} /> }
   ];
 
+  const [weather, setWeather] = useState({ temp: '--', condition: 'Loading...' });
+
+  const fetchWeather = async (cityName) => {
+    try {
+      const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityName)}&count=1&language=en&format=json`);
+      const geoData = await geoRes.json();
+      
+      if (geoData.results && geoData.results.length > 0) {
+        const { latitude, longitude } = geoData.results[0];
+        const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
+        const weatherData = await weatherRes.json();
+        
+        if (weatherData.current_weather) {
+          const temp = Math.round(weatherData.current_weather.temperature);
+          const code = weatherData.current_weather.weathercode;
+          const conditions = {
+            0: 'Clear Sky', 1: 'Mainly Clear', 2: 'Partly Cloudy', 3: 'Overcast',
+            45: 'Foggy', 48: 'Foggy', 51: 'Drizzle', 61: 'Rainy', 95: 'Thunderstorm'
+          };
+          setWeather({ temp: `${temp}°C`, condition: conditions[code] || 'Cloudy' });
+        }
+      }
+    } catch (error) { console.error('Weather error:', error); }
+  };
+
+  useEffect(() => {
+    if (districtData?.name) fetchWeather(districtData.name);
+  }, [districtData]);
+
   return (
     <div style={{ 
       minHeight: '100vh', 
@@ -84,8 +113,8 @@ const District = () => {
               <CloudSun size={40} />
               <div>
                 <p style={{ fontSize: '0.8rem', fontWeight: 700, opacity: 0.8, textTransform: 'uppercase' }}>Current Weather</p>
-                <p style={{ fontSize: '1.75rem', fontWeight: 900 }}>24°C</p>
-                <p style={{ fontSize: '0.9rem', fontWeight: 600 }}>Partly Cloudy</p>
+                <p style={{ fontSize: '1.75rem', fontWeight: 900 }}>{weather.temp}</p>
+                <p style={{ fontSize: '0.9rem', fontWeight: 600 }}>{weather.condition}</p>
               </div>
             </div>
           </div>
