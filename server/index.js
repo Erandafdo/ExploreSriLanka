@@ -40,6 +40,18 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+// Admin Login Endpoint
+app.post('/api/admin/login', (req, res) => {
+  const { password } = req.body;
+  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123'; // Default for local testing
+  
+  if (password === ADMIN_PASSWORD) {
+    res.json({ success: true, message: 'Login successful' });
+  } else {
+    res.status(401).json({ success: false, message: 'Invalid password' });
+  }
+});
+
 // API Routes
 app.get('/api/locations', async (req, res) => {
   try {

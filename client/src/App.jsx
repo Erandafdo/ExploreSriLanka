@@ -5,6 +5,8 @@ import District from './pages/District';
 import Category from './pages/Category';
 import LocationDetails from './pages/LocationDetails';
 import Admin from './pages/Admin';
+import Login from './pages/Login';
+import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
@@ -19,7 +21,12 @@ function App() {
             <Route path="/district/:id" element={<District />} />
             <Route path="/category/:type" element={<Category />} />
             <Route path="/location/:name" element={<LocationDetails />} />
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/admin" element={
+              <ProtectedRoute>
+                <Admin />
+              </ProtectedRoute>
+            } />
           </Routes>
         </div>
         <Footer />
@@ -29,3 +36,4 @@ function App() {
 }
 
 export default App;
+

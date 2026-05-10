@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Settings, Plus, Edit, Trash2, Save, X, MapPin, Star, Upload } from 'lucide-react';
+import { Settings, Plus, Edit, Trash2, Save, X, MapPin, Star, Upload, LogOut } from 'lucide-react';
 import API_BASE_URL from '../api';
 
 const SRI_LANKA_DISTRICTS = [
@@ -155,13 +155,25 @@ const Admin = () => {
             </h1>
             <p style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>Manage your destinations and reviews</p>
           </div>
-          <button 
-            onClick={() => handleOpenModal()}
-            className="liquid-glass" 
-            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.5rem', borderRadius: '9999px', background: 'var(--accent)', color: 'white', border: 'none', fontWeight: 700, cursor: 'pointer', boxShadow: '0 10px 15px -3px rgba(16, 185, 129, 0.2)' }}
-          >
-            <Plus size={20} /> Add Location
-          </button>
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <button 
+              onClick={() => {
+                localStorage.removeItem('adminAuthenticated');
+                window.location.href = '/login';
+              }}
+              className="liquid-glass" 
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.5rem', borderRadius: '9999px', background: 'white', color: 'var(--text-secondary)', border: 'none', fontWeight: 700, cursor: 'pointer' }}
+            >
+              <LogOut size={20} /> Logout
+            </button>
+            <button 
+              onClick={() => handleOpenModal()}
+              className="liquid-glass" 
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.5rem', borderRadius: '9999px', background: 'var(--accent)', color: 'white', border: 'none', fontWeight: 700, cursor: 'pointer', boxShadow: '0 10px 15px -3px rgba(16, 185, 129, 0.2)' }}
+            >
+              <Plus size={20} /> Add Location
+            </button>
+          </div>
         </div>
 
         <div className="liquid-glass" style={{ borderRadius: '1.5rem', overflowX: 'auto', background: 'white' }}>
