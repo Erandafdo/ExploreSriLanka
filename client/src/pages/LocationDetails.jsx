@@ -9,7 +9,7 @@ const LocationDetails = () => {
   const navigate = useNavigate();
   const [location, setLocation] = useState(null);
   const [loading, setLoading] = useState(true);
-  // Robust decoding
+  
   let decodedName = "";
   try {
     decodedName = name ? decodeURIComponent(name) : 'Location';
@@ -34,8 +34,6 @@ const LocationDetails = () => {
   const fetchWeather = async (locName, district) => {
     try {
       const cleanName = locName.split('(')[0].trim();
-      
-      // 1. Geocoding
       let geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cleanName)}&count=1&language=en&format=json`);
       let geoData = await geoRes.json();
       
@@ -46,8 +44,6 @@ const LocationDetails = () => {
 
       if (geoData.results && geoData.results.length > 0) {
         const { latitude, longitude } = geoData.results[0];
-        
-        // 2. Fetch Weather & Daily Forecast
         const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&daily=weathercode,temperature_2m_max&timezone=auto`);
         const weatherData = await weatherRes.json();
         
@@ -61,7 +57,6 @@ const LocationDetails = () => {
             61: 'Rainy', 63: 'Rainy', 65: 'Heavy Rain', 95: 'Thunderstorm'
           };
           
-          // Map 7-day forecast
           const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
           const forecast = weatherData.daily.time.map((date, i) => {
             const dayObj = new Date(date);
@@ -100,7 +95,6 @@ const LocationDetails = () => {
     }
   };
 
-  // Safety check for rendering
   if (loading) {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc' }}>
@@ -113,7 +107,7 @@ const LocationDetails = () => {
 
   if (!location) {
     return (
-      <div style={{ padding: '8rem 2rem', textAlign: 'center', minHeight: '100vh', background: '#f8fafc' }}>
+      <div className="container" style={{ padding: '8rem 0', textAlign: 'center', minHeight: '100vh' }}>
         <h2 style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: '1.5rem' }}>Location Not Found</h2>
         <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Sorry, we couldn't find the details for "{decodedName}".</p>
         <button onClick={() => navigate('/')} style={{ background: 'var(--accent)', color: 'white', padding: '1rem 2rem', borderRadius: '9999px', border: 'none', fontWeight: 800, cursor: 'pointer' }}>
@@ -132,7 +126,7 @@ const LocationDetails = () => {
       backgroundPosition: 'center',
       backgroundAttachment: 'fixed'
     }}>
-      <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '2rem' }}>
+      <div className="container" style={{ padding: 'var(--spacing-md) 0' }}>
         <button 
           onClick={() => navigate(-1)}
           style={{ 
@@ -163,7 +157,7 @@ const LocationDetails = () => {
           }}
         >
           {/* Hero Image Section */}
-          <div style={{ height: '400px', position: 'relative', overflow: 'hidden' }}>
+          <div className="details-hero" style={{ height: 'clamp(250px, 40vh, 450px)', position: 'relative', overflow: 'hidden' }}>
             <div style={{ 
               position: 'absolute', 
               inset: 0, 
@@ -174,22 +168,22 @@ const LocationDetails = () => {
             <div style={{ 
               position: 'absolute', 
               inset: 0, 
-              background: 'linear-gradient(to bottom, transparent, rgba(0,0,0,0.4))' 
+              background: 'linear-gradient(to bottom, transparent, rgba(0,0,0,0.5))' 
             }} />
-            <div style={{ position: 'absolute', bottom: '2rem', left: '2.5rem', right: '2.5rem' }}>
-              <span style={{ background: 'var(--accent)', color: 'white', padding: '0.4rem 1rem', borderRadius: '9999px', fontSize: '0.85rem', fontWeight: 800, marginBottom: '1rem', display: 'inline-block' }}>
+            <div style={{ position: 'absolute', bottom: 'var(--spacing-md)', left: 'var(--spacing-md)', right: 'var(--spacing-md)' }}>
+              <span style={{ background: 'var(--accent)', color: 'white', padding: '0.4rem 1rem', borderRadius: '9999px', fontSize: '0.85rem', fontWeight: 800, marginBottom: '0.75rem', display: 'inline-block' }}>
                 {location.category || 'Must Visit'}
               </span>
-              <h1 style={{ fontSize: '3.5rem', fontWeight: 900, color: 'white', textShadow: '0 2px 10px rgba(0,0,0,0.3)' }}>
+              <h1 style={{ fontSize: 'clamp(2rem, 6vw, 3.5rem)', fontWeight: 900, color: 'white', textShadow: '0 2px 10px rgba(0,0,0,0.3)', lineHeight: 1.1 }}>
                 {location.name}
               </h1>
             </div>
           </div>
 
-          <div style={{ padding: '3rem' }}>
+          <div style={{ padding: 'clamp(1.5rem, 5vw, 3rem)' }}>
             {/* Header Info */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(1rem, 3vw, 2rem)', flexWrap: 'wrap' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <Star fill="var(--accent)" color="var(--accent)" size={20} />
                   <span style={{ fontSize: '1.25rem', fontWeight: 800 }}>
@@ -212,10 +206,9 @@ const LocationDetails = () => {
               </div>
             </div>
 
-            {/* Main Content Grid (About & Sidebar) */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '3rem', marginBottom: '3rem' }}>
-              {/* Left: About & Highlights */}
-              <div style={{ flex: '1.6' }}>
+            {/* Main Content Grid */}
+            <div className="details-grid" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '3rem', marginBottom: '3rem' }}>
+              <div className="details-main">
                 <div style={{ marginBottom: '2.5rem' }}>
                   <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <Info size={24} color="var(--accent)" /> About {location.name}
@@ -227,10 +220,10 @@ const LocationDetails = () => {
 
                 <div>
                   <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '1.25rem' }}>Key Highlights</h3>
-                  <ul style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', padding: 0, listStyle: 'none' }}>
+                  <ul style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem', padding: 0, listStyle: 'none' }}>
                     {(location.highlights || []).map((item, idx) => (
                       <li key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
-                        <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent)' }}></div>
+                        <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }}></div>
                         {item}
                       </li>
                     ))}
@@ -238,16 +231,16 @@ const LocationDetails = () => {
                 </div>
               </div>
 
-              {/* Right: Quick Info Cards */}
-              <div style={{ flex: '1', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              {/* Quick Info Sidebar */}
+              <div className="details-sidebar" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                  <div className="liquid-glass" style={{ padding: '1.25rem', borderRadius: '1.25rem', background: 'rgba(255,255,255,0.4)' }}>
+                  <div className="liquid-glass" style={{ padding: '1.25rem', borderRadius: '1.25rem' }}>
                     <h3 style={{ fontSize: '1rem', fontWeight: 800, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <Calendar size={16} color="var(--accent)" /> Best Time
                     </h3>
                     <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{location.bestTime || 'Year-round'}</p>
                   </div>
-                  <div className="liquid-glass" style={{ padding: '1.25rem', borderRadius: '1.25rem', background: 'rgba(255,255,255,0.4)' }}>
+                  <div className="liquid-glass" style={{ padding: '1.25rem', borderRadius: '1.25rem' }}>
                     <h3 style={{ fontSize: '1rem', fontWeight: 800, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <Clock size={16} color="var(--accent)" /> Duration
                     </h3>
@@ -255,12 +248,12 @@ const LocationDetails = () => {
                   </div>
                 </div>
 
-                <div className="liquid-glass" style={{ padding: '1.25rem', borderRadius: '1.25rem', background: 'rgba(255,255,255,0.4)', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="liquid-glass" style={{ padding: '1.25rem', borderRadius: '1.25rem', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <ImageIcon size={20} color="var(--accent)" />
                     <span style={{ fontWeight: 700 }}>Photo Gallery</span>
                   </div>
-                  <span style={{ fontSize: '0.85rem', color: 'var(--accent)', fontWeight: 700 }}>12+ Photos</span>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--accent)', fontWeight: 700 }}>View Photos</span>
                 </div>
 
                 <button style={{ padding: '1.25rem', borderRadius: '1.25rem', border: 'none', background: 'var(--accent)', color: 'white', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', boxShadow: '0 10px 15px -3px rgba(16, 185, 129, 0.2)' }}>
@@ -269,70 +262,51 @@ const LocationDetails = () => {
               </div>
             </div>
 
-            {/* Map & Weather (Side-by-Side) */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '2rem', marginBottom: '4rem', paddingTop: '3rem', borderTop: '1px solid rgba(0,0,0,0.05)' }}>
-              <div className="liquid-glass" style={{ padding: '2rem', borderRadius: '2rem', background: 'rgba(255,255,255,0.5)', minHeight: '450px', display: 'flex', flexDirection: 'column' }}>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <style>{`
+              @media (min-width: 850px) {
+                .details-grid { grid-template-columns: 1.6fr 1fr !important; }
+              }
+            `}</style>
+
+            {/* Map & Weather */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', marginBottom: '4rem', paddingTop: '3rem', borderTop: '1px solid rgba(0,0,0,0.05)' }}>
+              <div className="liquid-glass" style={{ padding: '2rem', borderRadius: '2rem', minHeight: '400px', display: 'flex', flexDirection: 'column' }}>
+                <h3 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                   <MapPin size={24} color="var(--accent)" /> Location Map
                 </h3>
-                    <div style={{ flex: 1, borderRadius: '1.5rem', overflow: 'hidden', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.05)', position: 'relative' }}>
-                      <iframe 
-                        width="100%" 
-                        height="100%" 
-                        frameBorder="0" 
-                        scrolling="no" 
-                        src={(() => {
-                          const code = location.mapCode;
-                          if (!code) return `https://maps.google.com/maps?q=${encodeURIComponent(location.name + ' Sri Lanka')}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
-                          if (code.includes('http')) return code;
-                          return `https://maps.google.com/maps?q=${encodeURIComponent(code)}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
-                        })()}
-                        style={{ filter: 'grayscale(0.2) contrast(1.1)' }}
-                      ></iframe>
-                    </div>
-                    <a 
-                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location.mapCode || location.name + ' Sri Lanka')}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent)', fontWeight: 700, fontSize: '0.9rem', textDecoration: 'none' }}
-                    >
-                      <Navigation size={16} /> Open in Google Maps
-                    </a>
+                <div style={{ flex: 1, borderRadius: '1.5rem', overflow: 'hidden', position: 'relative' }}>
+                  <iframe 
+                    width="100%" 
+                    height="100%" 
+                    frameBorder="0" 
+                    src={location.mapCode?.includes('http') ? location.mapCode : `https://maps.google.com/maps?q=${encodeURIComponent(location.mapCode || location.name + ' Sri Lanka')}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
+                    style={{ filter: 'grayscale(0.1)' }}
+                  ></iframe>
+                </div>
               </div>
 
-              <div className="liquid-glass" style={{ padding: '2rem', borderRadius: '2rem', background: 'rgba(255,255,255,0.5)', minHeight: '450px', display: 'flex', flexDirection: 'column' }}>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                  <CloudSun size={24} color="var(--accent)" /> Weather Forecast
+              <div className="liquid-glass" style={{ padding: '2rem', borderRadius: '2rem', display: 'flex', flexDirection: 'column' }}>
+                <h3 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <CloudSun size={24} color="var(--accent)" /> Weather
                 </h3>
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.5rem', background: 'rgba(255,255,255,0.4)', borderRadius: '1.5rem' }}>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem', background: 'rgba(255,255,255,0.4)', borderRadius: '1.5rem' }}>
                     <div>
-                      <p style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Current</p>
-                      <p style={{ fontSize: '3rem', fontWeight: 900, color: 'var(--text-primary)' }}>{weather.temp}</p>
-                      <p style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--accent)' }}>{weather.condition}</p>
+                      <p style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Current</p>
+                      <p style={{ fontSize: '2.5rem', fontWeight: 900 }}>{weather.temp}</p>
+                      <p style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--accent)' }}>{weather.condition}</p>
                     </div>
-                    <CloudSun size={64} color="var(--accent)" />
+                    <CloudSun size={50} color="var(--accent)" />
                   </div>
                   
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-                    <div style={{ padding: '1.25rem', background: 'rgba(255,255,255,0.4)', borderRadius: '1.25rem' }}>
-                      <p style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Elevation</p>
-                      <p style={{ fontSize: '1.5rem', fontWeight: 900 }}>1,200m</p>
-                    </div>
-                    <div style={{ padding: '1.25rem', background: 'rgba(255,255,255,0.4)', borderRadius: '1.25rem' }}>
-                      <p style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>High / Low</p>
-                      <p style={{ fontSize: '1.5rem', fontWeight: 900 }}>31° / 24°</p>
-                    </div>
-                  </div>
-
-                  <div style={{ padding: '1.5rem', background: 'rgba(255,255,255,0.4)', borderRadius: '1.5rem', flex: 1 }}>
-                    <p style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>7-Day Outlook</p>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      {(weather.forecast.length > 0 ? weather.forecast : [...Array(7)]).map((item, i) => (
-                        <div key={i} style={{ textAlign: 'center' }}>
-                          <p style={{ fontSize: '0.8rem', fontWeight: 800, marginBottom: '0.5rem' }}>{item?.day || '-'}</p>
-                          {item?.code <= 3 ? <CloudSun size={20} color="var(--accent)" /> : <CloudRain size={20} color="var(--accent)" />}
-                          <p style={{ fontSize: '0.8rem', fontWeight: 800, marginTop: '0.5rem' }}>{item?.temp ? item.temp + '°' : '--'}</p>
+                  <div style={{ padding: '1.25rem', background: 'rgba(255,255,255,0.4)', borderRadius: '1.5rem' }}>
+                    <p style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-secondary)', marginBottom: '1rem' }}>Outlook</p>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', overflowX: 'auto', paddingBottom: '0.5rem', gap: '1rem' }}>
+                      {(weather.forecast.length > 0 ? weather.forecast : [...Array(5)]).slice(0, 5).map((item, i) => (
+                        <div key={i} style={{ textAlign: 'center', minWidth: '45px' }}>
+                          <p style={{ fontSize: '0.75rem', fontWeight: 800, marginBottom: '0.4rem' }}>{item?.day || '-'}</p>
+                          {item?.code <= 3 ? <CloudSun size={18} color="var(--accent)" /> : <CloudRain size={18} color="var(--accent)" />}
+                          <p style={{ fontSize: '0.8rem', fontWeight: 800, marginTop: '0.4rem' }}>{item?.temp ? item.temp + '°' : '--'}</p>
                         </div>
                       ))}
                     </div>
@@ -341,25 +315,23 @@ const LocationDetails = () => {
               </div>
             </div>
 
-            {/* Reviews Section (Full Width at Bottom) */}
+            {/* Reviews Section */}
             <div style={{ paddingTop: '4rem', borderTop: '1px solid rgba(0,0,0,0.05)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
-                <h2 style={{ fontSize: '2rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                  <Star size={32} color="var(--accent)" /> Reviews & Community
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+                <h2 style={{ fontSize: '1.75rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <Star size={28} color="var(--accent)" /> Reviews
                 </h2>
-                <div className="liquid-glass" style={{ padding: '0.6rem 1.5rem', borderRadius: '9999px', fontSize: '1rem', fontWeight: 800, color: 'var(--text-secondary)' }}>
-                  {location.views || 0} Total Views
+                <div className="liquid-glass" style={{ padding: '0.5rem 1.25rem', borderRadius: '9999px', fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-secondary)' }}>
+                  {location.views || 0} Views
                 </div>
               </div>
 
               <div style={{ display: 'grid', gap: '2rem' }}>
-                {/* Write a Review Form */}
                 <form 
                   onSubmit={async (e) => {
                     e.preventDefault();
                     const user = e.target.user.value;
                     const comment = e.target.comment.value;
-                    
                     try {
                       const response = await fetch(`${API_BASE_URL}/api/locations/${location.id}/reviews`, {
                         method: 'POST',
@@ -367,81 +339,57 @@ const LocationDetails = () => {
                         body: JSON.stringify({ user, rating: selectedRating, comment })
                       });
                       if (response.ok) {
-                        alert('Review posted successfully!');
-                        setSelectedRating(5); // Reset
-                        fetchLocationDetails(); // Refresh data
+                        alert('Review posted!');
+                        setSelectedRating(5);
+                        fetchLocationDetails();
                         e.target.reset();
                       }
-                    } catch (error) {
-                      console.error('Error posting review:', error);
-                    }
+                    } catch (error) { console.error(error); }
                   }}
                   className="liquid-glass" 
-                  style={{ padding: '3rem', borderRadius: '2rem', marginBottom: '2rem', background: 'rgba(255,255,255,0.6)' }}
+                  style={{ padding: 'clamp(1.5rem, 5vw, 2.5rem)', borderRadius: '2rem' }}
                 >
-                  <h3 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '1.5rem' }}>Share your journey</h3>
-                  
-                  <div style={{ marginBottom: '2rem' }}>
-                    <label style={{ display: 'block', fontWeight: 800, marginBottom: '0.75rem', fontSize: '0.9rem' }}>YOUR RATING</label>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 900, marginBottom: '1.5rem' }}>Leave a Review</h3>
+                  <div style={{ marginBottom: '1.5rem' }}>
+                    <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '1rem' }}>
                       {[1, 2, 3, 4, 5].map((star) => (
-                        <div 
+                        <Star 
                           key={star} 
-                          style={{ cursor: 'pointer' }}
+                          size={28} 
                           onClick={() => setSelectedRating(star)}
                           onMouseEnter={() => setHoverRating(star)}
                           onMouseLeave={() => setHoverRating(0)}
-                        >
-                          <Star 
-                            size={32} 
-                            fill={(hoverRating || selectedRating) >= star ? "var(--accent)" : "none"}
-                            color={(hoverRating || selectedRating) >= star ? "var(--accent)" : "rgba(0,0,0,0.2)"}
-                            style={{ transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)', transform: (hoverRating || selectedRating) >= star ? 'scale(1.1)' : 'scale(1)' }}
-                          />
-                        </div>
+                          fill={(hoverRating || selectedRating) >= star ? "var(--accent)" : "none"}
+                          color={(hoverRating || selectedRating) >= star ? "var(--accent)" : "rgba(0,0,0,0.2)"}
+                          style={{ cursor: 'pointer', transition: 'transform 0.2s' }}
+                        />
                       ))}
-                      <span style={{ marginLeft: '1rem', fontWeight: 800, color: 'var(--accent)', fontSize: '1.2rem' }}>{selectedRating}.0</span>
                     </div>
                   </div>
-
-                  <div style={{ display: 'grid', gap: '1.5rem', marginBottom: '2rem' }}>
-                    <div>
-                      <label style={{ display: 'block', fontWeight: 800, marginBottom: '0.5rem', fontSize: '0.9rem' }}>YOUR NAME</label>
-                      <input name="user" required placeholder="Enter your name" style={{ width: '100%', padding: '1rem', borderRadius: '1rem', border: '1px solid rgba(16, 185, 129, 0.2)', background: 'rgba(255,255,255,0.5)', outline: 'none' }} />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontWeight: 800, marginBottom: '0.5rem', fontSize: '0.9rem' }}>YOUR EXPERIENCE</label>
-                      <textarea name="comment" required placeholder="Tell other travelers about your visit..." style={{ width: '100%', minHeight: '120px', padding: '1rem', borderRadius: '1rem', border: '1px solid rgba(16, 185, 129, 0.2)', background: 'rgba(255,255,255,0.5)', outline: 'none', resize: 'vertical' }} />
-                    </div>
+                  <div style={{ display: 'grid', gap: '1rem', marginBottom: '1.5rem' }}>
+                    <input name="user" required placeholder="Your Name" style={{ width: '100%', padding: '0.8rem 1.25rem', borderRadius: '0.75rem', border: '1px solid rgba(16, 185, 129, 0.2)', background: 'rgba(255,255,255,0.5)', outline: 'none' }} />
+                    <textarea name="comment" required placeholder="Share your experience..." style={{ width: '100%', minHeight: '100px', padding: '0.8rem 1.25rem', borderRadius: '0.75rem', border: '1px solid rgba(16, 185, 129, 0.2)', background: 'rgba(255,255,255,0.5)', outline: 'none' }} />
                   </div>
-                  <button type="submit" style={{ padding: '1rem 3rem', borderRadius: '9999px', border: 'none', background: 'var(--accent)', color: 'white', fontWeight: 800, fontSize: '1.1rem', cursor: 'pointer', boxShadow: '0 10px 20px rgba(16, 185, 129, 0.2)' }}>Post Review</button>
+                  <button type="submit" style={{ width: '100%', padding: '1rem', borderRadius: '9999px', border: 'none', background: 'var(--accent)', color: 'white', fontWeight: 800, cursor: 'pointer' }}>Post Review</button>
                 </form>
 
-                {(!location.reviews || location.reviews.length === 0) ? (
-                  <p style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '2rem' }}>No reviews yet. Be the first to share your experience!</p>
-                ) : (
-                  location.reviews.map((review, idx) => (
+                <div style={{ display: 'grid', gap: '1.5rem' }}>
+                  {(location.reviews || []).map((review, idx) => (
                     <motion.div 
                       key={idx}
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
                       className="liquid-glass" 
-                      style={{ padding: '2.5rem', borderRadius: '2rem' }}
+                      style={{ padding: '1.5rem', borderRadius: '1.5rem' }}
                     >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                        <div>
-                          <h4 style={{ fontSize: '1.2rem', fontWeight: 900 }}>{review.user}</h4>
-                          <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{new Date(review.date).toLocaleDateString()}</p>
-                        </div>
-                        <div style={{ display: 'flex', gap: '0.2rem' }}>
-                          {[...Array(review.rating || 5)].map((_, i) => <Star key={i} size={16} fill="var(--accent)" color="var(--accent)" />)}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                        <h4 style={{ fontWeight: 800 }}>{review.user}</h4>
+                        <div style={{ display: 'flex' }}>
+                          {[...Array(review.rating || 5)].map((_, i) => <Star key={i} size={14} fill="var(--accent)" color="var(--accent)" />)}
                         </div>
                       </div>
-                      <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: 1.7 }}>"{review.comment}"</p>
+                      <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6 }}>{review.comment}</p>
                     </motion.div>
-                  ))
-                )}
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -452,3 +400,4 @@ const LocationDetails = () => {
 };
 
 export default LocationDetails;
+

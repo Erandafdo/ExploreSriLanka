@@ -18,11 +18,9 @@ const Category = () => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/locations`);
       const data = await response.json();
-      // Filter by category (case-insensitive)
       const filtered = data.filter(s => {
-        const cat = s.category.toLowerCase();
-        const t = type.toLowerCase();
-        // Match if names are identical OR if one is the plural/singular of the other
+        const cat = (s.category || '').toLowerCase();
+        const t = (type || '').toLowerCase();
         return cat === t || cat + 's' === t || t + 's' === cat || cat.includes(t) || t.includes(cat);
       });
       setSpots(filtered);
@@ -34,13 +32,13 @@ const Category = () => {
   return (
     <div style={{ 
       minHeight: '100vh', 
-      padding: '2rem',
+      paddingBottom: '4rem',
       backgroundImage: 'linear-gradient(rgba(241, 245, 249, 0.7), rgba(241, 245, 249, 0.9)), url("/landscape.png")',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'fixed'
     }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+      <div className="container" style={{ paddingTop: '2rem' }}>
         <Link to="/" style={{ 
           display: 'flex', 
           alignItems: 'center', 
@@ -58,17 +56,19 @@ const Category = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 style={{ fontSize: '3.5rem', fontWeight: 900, marginBottom: '1rem', textTransform: 'capitalize' }}>
+          <h1 style={{ fontSize: 'clamp(2.5rem, 8vw, 3.5rem)', fontWeight: 900, marginBottom: '1rem', textTransform: 'capitalize' }}>
             Top {type}
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '1.25rem', marginBottom: '3rem', maxWidth: '600px' }}>
-            Discover the most breathtaking {type.toLowerCase()} across the island, each offering a unique experience.
+            Discover the most breathtaking {type?.toLowerCase()} across the island, each offering a unique experience.
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '2.5rem' }}>
+          <div className="spots-grid">
             {spots.map((spot, idx) => (
               <motion.div 
                 key={idx}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
                 whileHover={{ y: -10 }}
                 onClick={() => navigate(`/location/${encodeURIComponent(spot.name)}`)}
                 className="liquid-glass"
@@ -82,10 +82,9 @@ const Category = () => {
                   overflow: 'hidden'
                 }}
               >
-                {/* Image Placeholder */}
                 <div style={{ 
                   width: 'calc(100% + 3rem)', 
-                  height: '180px', 
+                  height: '200px', 
                   margin: '-1.5rem -1.5rem 0.5rem -1.5rem',
                   position: 'relative',
                   overflow: 'hidden'
@@ -95,18 +94,15 @@ const Category = () => {
                     inset: 0,
                     backgroundImage: `url(${spot.thumbnail || spot.image || "/landscape.png"})`,
                     backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    opacity: 0.8
+                    backgroundPosition: 'center'
                   }} />
-                  <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
-                    <div style={{ position: 'absolute', top: '1rem', right: '1rem', padding: '0.4rem 0.8rem', borderRadius: '1rem', background: 'rgba(255,255,255,0.9)', display: 'flex', alignItems: 'center', gap: '0.3rem', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
+                  <div style={{ position: 'absolute', top: '1.25rem', right: '1.25rem', padding: '0.4rem 0.8rem', borderRadius: '1rem', background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', gap: '0.3rem', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
                     <Star size={14} fill="var(--accent)" color="var(--accent)" />
                     <span style={{ fontWeight: 800, fontSize: '0.85rem' }}>
                       {spot.reviews && spot.reviews.length > 0 
                         ? (spot.reviews.reduce((acc, r) => acc + (r.rating || 5), 0) / spot.reviews.length).toFixed(1)
                         : (spot.rating || '5.0')}
                     </span>
-                  </div>
                   </div>
                 </div>
 
@@ -118,23 +114,22 @@ const Category = () => {
                   </div>
                 </div>
 
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6, flex: 1 }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, flex: 1 }}>
                   {spot.description}
                 </p>
 
-                <Link to={`/location/${encodeURIComponent(spot.name)}`} style={{ 
-                  marginTop: '1rem',
-                  textDecoration: 'none',
-                  color: 'var(--accent)',
-                  fontWeight: 700,
-                  fontSize: '0.9rem',
-                  textAlign: 'right'
-                }}>
-                  Explore Location →
-                </Link>
+                <div style={{ marginTop: '0.5rem', display: 'flex', justifyContent: 'flex-end' }}>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--accent)' }}>Explore →</span>
+                </div>
               </motion.div>
             ))}
           </div>
+          
+          {spots.length === 0 && (
+            <div style={{ textAlign: 'center', padding: '4rem 0' }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem' }}>No locations found in this category.</p>
+            </div>
+          )}
         </motion.div>
       </div>
     </div>
@@ -142,3 +137,4 @@ const Category = () => {
 };
 
 export default Category;
+
