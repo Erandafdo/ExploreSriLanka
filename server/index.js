@@ -232,3 +232,6 @@ app.delete('/api/locations/:id', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+// Export for Vercel Serverless
+module.exports = app;
