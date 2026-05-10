@@ -30,14 +30,24 @@ app.get('/', (req, res) => {
 });
 
 // Multer Setup for Image Uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
+// Cloudinary Configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'explore-sri-lanka',
+    allowed_formats: ['jpg', 'png', 'jpeg', 'webp']
   }
 });
+
 const upload = multer({ storage: storage });
 
 // Admin Login Endpoint
@@ -150,13 +160,14 @@ app.delete('/api/locations/:id/reviews/:reviewId', async (req, res) => {
 
 // Upload Endpoint
 app.post('/api/upload', upload.single('image'), (req, res) => {
-  if (req.file) {
-    // Dynamically resolve base URL
-    const baseUrl = process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
-    res.json({ url: `${baseUrl}/uploads/${req.file.filename}` });
-  } else {
-    res.status(400).json({ message: 'No file uploaded' });
+  if (!req.file) {
+    return res.status(400).json({ message: 'No file uploaded' });
   }
+  // With Cloudinary, req.file.path is the full URL of the image
+  res.json({ 
+    imageUrl: req.file.path,
+    thumbnailUrl: req.file.path 
+  });
 });
 
 const he = require('he');
