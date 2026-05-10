@@ -25,6 +25,7 @@ const Footer = () => {
         <a href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Privacy Policy</a>
         <a href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Terms</a>
         <a href="#" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Contact</a>
+        <a href="/admin" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: 700 }}>Admin</a>
       </div>
       
       <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', opacity: 0.7 }}>
