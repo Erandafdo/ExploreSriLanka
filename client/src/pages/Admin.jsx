@@ -223,7 +223,7 @@ const Admin = () => {
           </div>
 
           {/* Mobile Card View */}
-          <div className="mobile-only-cards" style={{ display: 'grid', gap: '1rem' }}>
+          <div className="mobile-only-cards" style={{ gap: '1rem' }}>
             {locations.map((loc) => (
               <div key={loc.id} className="liquid-glass" style={{ background: 'white', padding: '1.25rem', borderRadius: '1.5rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
                 <div style={{ width: '80px', height: '60px', borderRadius: '0.75rem', backgroundImage: `url(${loc.thumbnail || loc.image})`, backgroundSize: 'cover', backgroundPosition: 'center', flexShrink: 0 }}></div>
